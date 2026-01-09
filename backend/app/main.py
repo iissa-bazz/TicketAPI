@@ -34,8 +34,9 @@ def create_ticket(ticket: NewTicket) -> str:
         raise RequestValidationError("Ticket title cannot be empty.")
     elif ticket.description.strip() == "":
         raise RequestValidationError("Ticket description cannot be empty.")
-    elif ticket.status not in ["open","in_progress","closed"]:
-        raise RequestValidationError("Ticket status must be one of: open, in_progress, closed.")
+    ## This is handled by Pydantic Enum validation... 
+    #elif ticket.status not in ["open","in_progress","closed"]:
+    #    raise RequestValidationError("Ticket status must be one of: open, in_progress, closed.")
     new_ticket = TicketDB.create_ticket(ticket)
     if not app.testing: TicketDB.dump_tickets()
     return new_ticket.id

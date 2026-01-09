@@ -32,7 +32,9 @@ def test_create_ticket():
     response = client.get("/tickets/")
     assert response.status_code == 200
     tickets = response.json()
-    assert any(ticket["title"] == "Test Ticket" and ticket["id"] == str(11) for ticket in tickets)
+    ticket_11 = next(ticket for ticket in tickets if ticket["id"] == "11")
+    assert ticket_11["title"] == "Test Ticket" and ticket_11["id"] == "11"
+    print(ticket_11)
     
 def test_error_create_ticket():
     # Test empty title
@@ -65,10 +67,31 @@ def test_error_create_ticket():
     print(response.json())
     assert response.status_code == 422
     
+    
+def test_update_ticket_status():
+    # Update status of an existing ticket
+    response = client.put("/tickets/11/status/closed")
+    assert response.status_code == 200
+    assert response.json() == "Ticket 11 status updated to closed."
+    
+    # Verify the status was updated
+    response = client.get("/tickets/")
+    assert response.status_code == 200
+    tickets = response.json()
+    ticket_11 = next(ticket for ticket in tickets if ticket["id"] == "11")
+    assert ticket_11["status"] == "closed"
+    print(ticket_11)
+    
+    # Try to update a non-existing ticket
+    response = client.put("/tickets/999/status/closed")
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Ticket with id 999 does not exist."
+    
 
 if __name__ == "__main__":    
     test_read_root()
     test_read_tickets()
     test_create_ticket()
     test_error_create_ticket()
+    test_update_ticket_status()
     print("All tests passed.")

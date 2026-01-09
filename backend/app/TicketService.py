@@ -6,16 +6,16 @@ from datetime import datetime
 # GLOBAL VARIABLES
 json_file_path = '../data/tickets.json'
 
+StatusType = Literal["open" , "in_progress" , "closed"]
+
 class NewTicket(BaseModel):
     title: str
     description: str
-    status: Literal["open" , "in_progress" , "closed"] = "open"
-
+    status: StatusType = "open"
 
 class Ticket(NewTicket):    
     id: str
     created_at: datetime
-    
     
 class TicketDB:
     tickets: dict[str,Ticket] = {}
@@ -41,6 +41,13 @@ class TicketDB:
             raise ValueError(f"Ticket with id {ticket.id} already exists.")
         else:
             cls.tickets[ticket.id]=ticket
+            
+    @classmethod
+    def update_ticket(cls, ticket_id: str, status: StatusType) -> None:
+        if ticket_id not in cls.tickets.keys():
+            raise ValueError(f"Ticket with id {ticket_id} does not exist.")
+        else:
+            cls.tickets[ticket_id].status = status
         
     @classmethod
     def get_tickets(cls) -> dict[str,Ticket]:

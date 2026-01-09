@@ -11,7 +11,7 @@
 ## FRAMEWORK
 from fastapi import FastAPI, HTTPException
 from fastapi.exceptions import RequestValidationError
-from TicketService import NewTicket, Ticket, TicketDB, json_file_path
+from TicketService import NewTicket, Ticket, TicketDB, StatusType
 # INITIALIZE TICKET DB
 TicketDB.load_tickets()
 
@@ -34,12 +34,19 @@ def create_ticket(ticket: NewTicket) -> str:
         raise RequestValidationError("Ticket title cannot be empty.")
     elif ticket.description.strip() == "":
         raise RequestValidationError("Ticket description cannot be empty.")
-    ## This is handled by Pydantic Enum validation... 
-    #elif ticket.status not in ["open","in_progress","closed"]:
-    #    raise RequestValidationError("Ticket status must be one of: open, in_progress, closed.")
     new_ticket = TicketDB.create_ticket(ticket)
     if not app.testing: TicketDB.dump_tickets()
     return new_ticket.id
+
+
+@app.put("/tickets/{ticket_id}/status/{status}")
+def update_ticket_status(ticket_id: str, status: StatusType) -> str:
+    try:
+        TicketDB.update_ticket(ticket_id, status)
+        if not app.testing: TicketDB.dump_tickets()
+        return f"Ticket {ticket_id} status updated to {status}."
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
 
 

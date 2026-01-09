@@ -8,7 +8,7 @@
     - [main.py](./backend/app/main.py): The main application file.
     - [TicketService.py](./backend/app/TicketService.py): Module handling ticket operations (db, persistence).
     - [TestTicketService.py](./backend/app/TestTicketService.py): Unit tests for TicketService endpoints.
-  - [data/](./backend/data): Contains the initial ticket data.
+  - [data/tickets.json](./backend/data/tickets.json): Contains the initial ticket data.
 - [docs/](./docs): Documentation and frontend integration plan.
   - [frontend_plan.md](./docs/frontend_plan.md): Explanation of frontend design and API integration.
   - [demo.ipynb](./docs/demo.ipynb): Jupyter notebook demonstrating API usage.

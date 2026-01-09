@@ -1,7 +1,5 @@
-# TicketServiceAPI
+# TicketAPI
 
-
-TicketServiceAPI is a RESTful API designed to manage simple ticketing operations. Here's how to set it up and run it.
 
 ## Overview
 

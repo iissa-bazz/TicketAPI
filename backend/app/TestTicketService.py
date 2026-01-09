@@ -33,7 +33,7 @@ class TestTicketService(unittest.TestCase):
             "status": "open"
         }
         response = client.post("/tickets/", json=new_ticket)
-        assert response.status_code == 200
+        assert response.status_code == 201
         assert isinstance(response.json(), str)
         
         # Verify the ticket was added

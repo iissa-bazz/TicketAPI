@@ -18,7 +18,7 @@ def read_tickets() -> list[Ticket]:
     """Retrieve all tickets."""
     return TicketDB.get_tickets()
 
-@app.post("/tickets/")
+@app.post("/tickets/", status_code=201)
 def create_ticket(ticket: NewTicket) -> str:
     """Creates a new ticket in the database with unique ID."""
     if ticket.title.strip() == "":

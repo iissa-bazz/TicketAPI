@@ -14,6 +14,12 @@ from pprint import pprint
 from datetime import datetime
 
 
+# GLOBAL VARIABLES
+json_file_path = '../data/tickets.json'
+
+
+
+
 class Ticket(BaseModel):    
     id: str
     title: str
@@ -41,13 +47,13 @@ class TicketDB:
         return [ ticket.model_dump( mode='json') for ticket in cls.tickets.values() ]
     
     @classmethod
-    def dump_tickets(cls, filename:str) -> None:
+    def dump_tickets(cls, filename:str=json_file_path) -> None:
         with open(filename, 'w') as fd:
             json.dump( cls.get_tickets_json() , fd, indent=4)   
     
     
     @classmethod
-    def load_tickets(cls, filename:str) -> None:
+    def load_tickets(cls, filename:str=json_file_path) -> None:
         # LOAD JSON DATA
         with open(filename) as json_data:
             data = json.load(json_data)
@@ -72,7 +78,7 @@ if __name__ == "__main__":
     # print(df.to_json(orient='records',lines=True))
 
     # LOAD JSON DATA
-    with open('tickets.json') as json_data:
+    with open(json_file_path) as json_data:
         data = json.load(json_data)
         pprint(data[0])
         #pprint([item for item in data[0].items()])
@@ -91,8 +97,8 @@ if __name__ == "__main__":
         
         
         
-    TicketDB.load_tickets('tickets.json')
+    TicketDB.load_tickets(json_file_path)
     print(TicketDB.get_tickets())
     print(TicketDB.get_tickets_json())
-    TicketDB.dump_tickets('tickets_out.json')
+    TicketDB.dump_tickets('../data/tickets_out.json')
         

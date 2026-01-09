@@ -8,8 +8,17 @@
 
 ## FRAMEWORK
 from fastapi import FastAPI
-from TicketService import Ticket, TicketDB
-TicketDB.load_tickets('tickets.json')
+from TicketService import Ticket, TicketDB, json_file_path
+
+
+
+
+        
+TicketDB.load_tickets()
+# print(TicketDB.get_tickets())
+# print(TicketDB.get_tickets_json())
+# TicketDB.dump_tickets('../data/tickets_out.json')
+
 app = FastAPI()
 
 
@@ -21,3 +30,9 @@ def read_root()-> str:
 @app.get("/tickets/")
 def read_tickets() -> list[Ticket]:
     return TicketDB.get_tickets()
+
+
+
+
+
+    

@@ -83,9 +83,6 @@ class TicketDB:
 
 
 
-
-
-
 if __name__ == "__main__":
 
     # LOAD JSON DATA

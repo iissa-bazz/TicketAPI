@@ -39,12 +39,12 @@ def test_create_ticket():
 def test_error_create_ticket():
     # Test empty title
     new_ticket = {
-        "title": "",
+        "title": " ",
         "description": "This is a test ticket.",
         "status": "open"
     }
     response = client.post("/tickets/", json=new_ticket)
-    print(response.json())
+    print(response.json(),response.status_code)
     assert response.status_code == 422
     
     # Test empty description
@@ -54,7 +54,7 @@ def test_error_create_ticket():
         "status": "open"
     }
     response = client.post("/tickets/", json=new_ticket)
-    print(response.json())
+    print(response.json(),response.status_code)
     assert response.status_code == 422
     
     # Test invalid status
@@ -64,13 +64,13 @@ def test_error_create_ticket():
         "status": "invalid_status"
     }
     response = client.post("/tickets/", json=new_ticket)
-    print(response.json())
+    print(response.json(),response.status_code)
     assert response.status_code == 422
     
     
 def test_update_ticket_status():
-    # Update status of an existing ticket
-    response = client.put("/tickets/11/status/closed")
+    response = client.patch("/tickets/11", json={"status": "closed"})
+    print(response.json())
     assert response.status_code == 200
     assert response.json() == "Ticket 11 status updated to closed."
     
@@ -79,11 +79,11 @@ def test_update_ticket_status():
     assert response.status_code == 200
     tickets = response.json()
     ticket_11 = next(ticket for ticket in tickets if ticket["id"] == "11")
-    assert ticket_11["status"] == "closed"
     print(ticket_11)
+    assert ticket_11["status"] == "closed"
     
     # Try to update a non-existing ticket
-    response = client.put("/tickets/999/status/closed")
+    response = client.patch("/tickets/999", json={"status": "closed"})
     assert response.status_code == 404
     assert response.json()["detail"] == "Ticket with id 999 does not exist."
     

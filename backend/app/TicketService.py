@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ValidationError
+from pydantic import BaseModel, ValidationError, Field
 from typing import Literal
 import json
 from datetime import datetime
@@ -8,13 +8,16 @@ json_file_path = '../data/tickets.json'
 
 StatusType = Literal["open" , "in_progress" , "closed"]
 
+class StatusUpdate(BaseModel):
+    status: StatusType
+
 class NewTicket(BaseModel):
-    title: str
-    description: str
+    title: str = Field(..., min_length=1)
+    description: str = Field(..., min_length=1)
     status: StatusType = "open"
 
 class Ticket(NewTicket):    
-    id: str
+    id: str = Field(..., min_length=1)
     created_at: datetime
     
 class TicketDB:

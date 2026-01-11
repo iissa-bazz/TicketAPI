@@ -30,7 +30,7 @@
 
 ## How would the frontend communicate with the API?
 
-- Axios API Client with Vite proxy configured to forward `/api/*` to `http://localhost:8000` (avoids CORS issues during development)
+- Axios API Client with CORS middleware configured on the FastAPI backend or with Vite proxy configured to forward `/api/*` to `http://localhost:8000` (to avoid CORS issues during development) 
 - React Query Integration (automatic caching avoids duplicate requests)
 
 

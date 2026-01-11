@@ -10,9 +10,10 @@
     - [TestTicketService.py](./backend/app/TestTicketService.py): Unit tests for TicketService endpoints.
   - [data/tickets.json](./backend/data/tickets.json): Contains the initial ticket data.
 - [docs/](./docs): Documentation and frontend integration plan.
-  - [frontend_plan.md](./docs/frontend_plan.md): Explanation of frontend design and API integration.
   - [demo.ipynb](./docs/demo.ipynb): Jupyter notebook demonstrating API usage.
+  - [frontend_plan.md](./docs/frontend_plan.md): Explanation of frontend design and API integration.
   - [homework-assignment.md](./docs/homework-assignment.md): Original assignment description.
+  - [requirements_engineering.md](./docs/requirements_engineering.md): Requirements engineering discussion.
 
 
 

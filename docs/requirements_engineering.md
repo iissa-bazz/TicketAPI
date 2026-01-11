@@ -27,11 +27,11 @@ A Product Owner asks for an urgent new feature for the Fleet Portal to satisfy n
         - Won't have: Explicitly deferred
     - How you translate the idea into an implementation plan 
       - Create technical design document (architecture, API contracts, data models)
-      - Estimate effort/time frame and identify unknowns/risks
       - Delivery Artifacts:
         - Feature Hierarchy -> Roadmap/Release Timeline
         - User Stories  -> Backlog 
         - Acceptance Criteria -> Test Cases
+      - Estimate effort/time frame and identify unknowns/risks
     - How you validate that the feature delivers business value
       - **Pre-launch:**
         - Validate user requirements (acceptance criteria met through testing)

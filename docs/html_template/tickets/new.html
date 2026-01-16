@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New Ticket</title>
+    <style>
+        .form-group { margin-bottom: 15px; display: flex; flex-direction: column; width: 300px; }
+        label { font-weight: bold; margin-bottom: 5px; }
+        .actions { margin-top: 20px; display: flex; gap: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Create / Edit Ticket</h1>
+    <form>
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" id="title" value="Unable to start charging session">
+        </div>
+
+        <div class="form-group">
+            <label for="desc">Description</label>
+            <textarea id="desc" rows="4">The charging station shows an error when trying to start the session from the app.</textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="status">Status</label>
+            <select id="status">
+                <option value="open" selected>Open</option>
+                <option value="in_progress">In Progress</option>
+                <option value="closed">Closed</option>
+            </select>
+        </div>
+
+        <div class="actions">
+            <button type="button">Modify</button>
+            <button type="button">Save</button>
+            <button type="submit" style="background-color: blue; color: white;">Submit</button>
+        </div>
+    </form>
+    <p><a href="../tickets.html">← Back to list</a></p>
+</body>
+</html>

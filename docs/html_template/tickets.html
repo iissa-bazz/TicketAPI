@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ticketing System - Home</title>
+    <style>
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #f4f4f4; }
+        .controls { display: flex; gap: 10px; margin-bottom: 20px; align-items: center; }
+        .btn-new { background-color: #28a745; color: white; padding: 10px 15px; text-decoration: none; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <h1>Support Tickets</h1>
+
+    <div class="controls">
+        <label>Filter by Status:
+            <select>
+                <option value="all">All</option>
+                <option value="open">Open</option>
+                <option value="in_progress">In Progress</option>
+                <option value="closed">Closed</option>
+            </select>
+        </label>
+
+        <label>Sort by:
+            <select>
+                <option value="created_at">Date Created</option>
+                <option value="title">Title</option>
+            </select>
+        </label>
+
+        <a href="tickets/new.html" class="btn-new">+ New Ticket</a>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Title (Click to expand)</th>
+                <th>Created At</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><a href="tickets/1.html">Unable to start charging session</a></td>
+                <td>2025-01-05 10:12</td>
+                <td><span class="status-pill">open</span></td>
+            </tr>
+            <tr>
+                <td><a href="tickets/1.html">Payment not processed</a></td>
+                <td>2025-01-04 14:47</td>
+                <td><span class="status-pill">in_progress</span></td>
+            </tr>
+            <tr>
+                <td><a href="tickets/1.html">My charging history shows a session that I did not perform.</a></td>
+                <td>2025-01-02T09:03:55Z</td>
+                <td><span class="status-pill">closed</span></td>
+            </tr>
+            <tr>
+                <td><a href="tickets/1.html">My RFID card is no longer recognized at multiple charging stations.</a></td>
+                <td>2025-01-06T08:21:44Z</td>
+                <td><span class="status-pill">open</span></td>
+            </tr>
+            <tr>
+                <td><a href="tickets/1.html">The mobile app closes immediately after opening on Android.</a></td>
+                <td>2025-01-06T11:02:10Z</td>
+                <td><span class="status-pill">in_progress</span></td>
+            </tr>
+            <tr>
+                <td><a href="tickets/1.html">The charging session stops after a few minutes even though the battery is not full.</a></td>
+                <td>2025-01-07T07:49:05Z</td>
+                <td><span class="status-pill">open</span></td>
+            </tr>
+            <tr>
+                <td><a href="tickets/1.html">I cannot find the invoice for my last charging session in the billing section.</a></td>
+                <td>2025-01-03T16:28:40Z</td>
+                <td><span class="status-pill">closed</span></td>
+            </tr>
+            <tr>
+                <td><a href="tickets/1.html">It takes several minutes before the charging station responds to any command.</a></td>
+                <td>2025-01-07T12:15:22Z</td>
+                <td><span class="status-pill">open</span></td>
+            </tr>
+            <tr>
+                <td><a href="tickets/1.html">The price shown for my session does not match the advertised tariff.</a></td>
+                <td>2025-01-06T09:37:18Z</td>
+                <td><span class="status-pill">in_progress</span></td>
+            </tr>
+            <tr>
+                <td><a href="tickets/1.html">I am unable to log into my account after resetting my password.</a></td>
+                <td>2025-01-07T13:56:09Z</td>
+                <td><span class="status-pill">open</span></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

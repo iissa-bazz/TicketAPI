@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ticket Details - #1</title>
+    <style>
+        .detail-card { border: 1px solid #ccc; padding: 20px; border-radius: 8px; max-width: 600px; }
+        .status-update { margin-top: 30px; padding: 15px; background: #f9f9f9; border-top: 2px solid #eee; }
+    </style>
+</head>
+<body>
+    <div class="detail-card">
+        <h1>Ticket #1</h1>
+        <h2>Unable to start charging session</h2>
+        <p><strong>Created:</strong> 2025-01-05T10:12:30Z</p>
+        <p><strong>Current Status:</strong> <mark>open</mark></p>
+        <hr>
+        <p><strong>Description:</strong><br>
+        The charging station shows an error when trying to start the session from the app.</p>
+
+        <div class="status-update">
+            <h3>Update Status</h3>
+            <p>Select a new status for this ticket:</p>
+            <form>
+                <select name="new-status">
+                    <option value="open">Open</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="closed">Closed</option>
+                </select>
+                <button type="submit">Update Status</button>
+            </form>
+        </div>
+    </div>
+    <p><a href="../tickets.html">← Back to list</a></p>
+</body>
+</html>

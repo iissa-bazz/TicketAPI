@@ -2,17 +2,12 @@ import TicketData from '../assets/tickets.json'
 import { Link, Outlet } from 'react-router-dom';
 
 
-
-
-
 export default function TicketList() {
 
   return (
     <div style={{ padding: '20px' }}>
       <h1>Support Tickets</h1>
       
-
-
         <div className="controls">
           <label>{` Filter by Status: `}
               <select>
@@ -49,6 +44,7 @@ export default function TicketList() {
           <tr key={t.id}>
             <td><Link to={`/tickets/${t.id}`}>{t.title}</Link></td>
             <td>{t.created_at}</td>
+            <td>{t.status}</td>
           </tr>
         ))}
         </tbody>

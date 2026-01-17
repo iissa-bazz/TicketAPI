@@ -56,6 +56,6 @@ export default function TicketList() {
   );
 }
 
-const btnStyle = { background: '#638cebff', color: 'white', padding: '10px', textDecoration: 'none' };
+const btnStyle = { background: 'lightgreen' /*'#638cebff'*/, color: 'white', padding: '10px', textDecoration: 'none' };
 
 

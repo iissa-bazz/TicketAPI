@@ -1,19 +1,28 @@
-import { Link} from 'react-router-dom';
+import { Link, useParams} from 'react-router-dom';
+import  useState from 'react';
 import Modal from './Modal';
+import TicketData from '../assets/tickets.json';
 
 
 
 export default function TicketDetails() {
-  return (<>
+    const { id } = useParams<{ id: string }>();
+    // LATER: Replace with React Query and API call
+    const ticket = TicketData.find((t) => t.id === id);
+    
+    return (
+        <>
             <Modal>
                 <div  className="detail-card">
-                    <h1>Ticket #1</h1>
-                    <h2>Unable to start charging session</h2>
-                    <p><strong>Created:</strong> 2025-01-05T10:12:30Z</p>
-                    <p><strong>Current Status:</strong> open</p>
+                    <h1>Ticket #{id}</h1>
+                    <h2>{ticket?.title}</h2>
+                    <p>{ticket?.description}</p>
+                    <hr></hr>
+                    <p><strong>Created:</strong> {ticket?.created_at}</p>
+                    <p><strong>Current Status:</strong> {ticket?.status}</p>
                     <div  className="status-update">
                         <form>
-                            <select name="new-status">
+                            <select name="new-status" style={{backgroundColor: 'rgba(75, 78, 229, 0.42)'}}>
                                 <option value="open">Open</option>
                                 <option value="in_progress">In Progress</option>
                                 <option value="closed">Closed</option>
@@ -21,9 +30,6 @@ export default function TicketDetails() {
                             <button type="submit" style={{ backgroundColor: 'lightgreen', color: 'white' }}>Update Status</button>
                         </form>
                     </div>
-                    <hr></hr>
-                    <p><strong>Description:</strong><br></br>
-                    The charging station shows an error when trying to start the session from the app.</p>
 
                     
                     <p><Link to={`/`}>← Back to list</Link></p>  

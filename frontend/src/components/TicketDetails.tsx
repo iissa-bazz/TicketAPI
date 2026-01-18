@@ -48,26 +48,24 @@ export default function TicketDetails() {
         mutation.mutate(newStatus);
     };
 
-
-    if (
-            (isFetching || isLoading) 
-            //&& !ticket // Uncommenting this line will result in the default value of the select options to remain stuck at the initial value when the component rendered...
-        ) return <Modal><div>Loading details...</div></Modal>;
+    // Without `if(... && !ticket)` and ` key={ticket.status}` in the select component,  
+    // the default value of the select options will remain stuck at the initial value when the component rendered...
+    if ( (isFetching || isLoading)  && !ticket ) return <Modal><div>Loading details...</div></Modal>;
     if (!ticket) return <Modal><div>Ticket not found</div></Modal>;
-
+        
     return (
         <>
             <Modal>
                 <div  className="detail-card">
                     <h1>Ticket #{id}</h1>
-                    <h2>{ticket?.title}</h2>
-                    <p>{ticket?.description}</p>
+                    <h2>{ticket.title}</h2>
+                    <p>{ticket.description}</p>
                     <hr></hr>
-                    <p><strong>Created:</strong> {ticket?.created_at}</p>
+                    <p><strong>Created:</strong> {ticket.created_at}</p>
                     <p><strong>Current Status:</strong> {ticket?.status}</p>
                     <div  className="status-update">
                         <form onSubmit={handleStatusSubmit} >
-                            <select id="new-status" name="new-status" defaultValue={ticket?.status}  style={{backgroundColor: 'rgba(132, 152, 175, 0.69)'}}>
+                            <select id="new-status" name="new-status" key={ticket.status} defaultValue={ticket?.status}  style={{backgroundColor: 'rgba(132, 152, 175, 0.69)'}}>
                                 <option value="open">Open</option>
                                 <option value="in_progress">In Progress</option>
                                 <option value="closed">Closed</option>

@@ -21,6 +21,7 @@ export default function Modal({ children }: { children: React.ReactNode }) {
     };
   }, [navigate]); // 
 
+
   return (
     <div style={overlayStyle} onClick={() => navigate('/')}>
       <div style={modalStyle} onClick={(e) => e.stopPropagation()}>

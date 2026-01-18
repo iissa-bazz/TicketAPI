@@ -1,6 +1,7 @@
 ## FRAMEWORK
 from fastapi import FastAPI, HTTPException
 from fastapi.exceptions import RequestValidationError
+from fastapi.middleware.cors import CORSMiddleware
 from TicketService import NewTicket, Ticket, StatusUpdate, TicketDB
 # INITIALIZE TICKET DB
 TicketDB.load_tickets()
@@ -8,17 +9,31 @@ TicketDB.load_tickets()
 app = FastAPI()
 app.testing = False      # Changes create_ticket endpoint behavior for testing
 
+origins = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
+
+# 2. Add the middleware to your app
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows GET, POST, PATCH, etc.
+    allow_headers=["*"],  # Allows all headers
+)
+
 @app.get("/")
 def read_root()-> str:
     """Welcome endpoint."""
     return "Welcome to the Ticket Service API!"   
 
-@app.get("/tickets/")
+@app.get("/tickets")
 def read_tickets() -> list[Ticket]:
     """Retrieve all tickets."""
     return TicketDB.get_tickets()
 
-@app.post("/tickets/", status_code=201)
+@app.post("/tickets", status_code=201)
 def create_ticket(ticket: NewTicket) -> str:
     """Creates a new ticket in the database with unique ID."""
     if ticket.title.strip() == "":

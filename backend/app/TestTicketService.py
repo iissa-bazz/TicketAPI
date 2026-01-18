@@ -17,7 +17,7 @@ class TestTicketService(unittest.TestCase):
         
     def test_read_tickets(self):
         print(f"{separator}\nTEST: READ TICKETS\n\nRetrieving all tickets:\n")
-        response = client.get("/tickets/")
+        response = client.get("/tickets")
         assert response.status_code == 200
         assert isinstance(response.json(), list)
         assert len(response.json()) == 11
@@ -32,12 +32,12 @@ class TestTicketService(unittest.TestCase):
             "description": "This is a test ticket.",
             "status": "open"
         }
-        response = client.post("/tickets/", json=new_ticket)
+        response = client.post("/tickets", json=new_ticket)
         assert response.status_code == 201
         assert isinstance(response.json(), str)
         
         # Verify the ticket was added
-        response = client.get("/tickets/")
+        response = client.get("/tickets")
         assert response.status_code == 200
         tickets = response.json()
         ticket_11 = next(ticket for ticket in tickets if ticket["id"] == "11")
@@ -52,7 +52,7 @@ class TestTicketService(unittest.TestCase):
             "description": "This is a test ticket.",
             "status": "open"
         }
-        response = client.post("/tickets/", json=new_ticket)
+        response = client.post("/tickets", json=new_ticket)
         print(response.json(),response.status_code)
         assert response.status_code == 422
         
@@ -62,7 +62,7 @@ class TestTicketService(unittest.TestCase):
             "description": "",
             "status": "open"
         }
-        response = client.post("/tickets/", json=new_ticket)
+        response = client.post("/tickets", json=new_ticket)
         print(response.json(),response.status_code)
         assert response.status_code == 422
         
@@ -72,7 +72,7 @@ class TestTicketService(unittest.TestCase):
             "description": "This is a test ticket.",
             "status": "invalid_status"
         }
-        response = client.post("/tickets/", json=new_ticket)
+        response = client.post("/tickets", json=new_ticket)
         print(response.json(),response.status_code)
         assert response.status_code == 422
         

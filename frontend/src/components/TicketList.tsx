@@ -1,12 +1,17 @@
 import { Link, Outlet } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import TicketData from '../assets/tickets.json'
+import apiClient from '../api/client';
+import type { Ticket } from '../types';
 
+const fetchTickets = async (): Promise<Ticket[]> => {
+    const response = await apiClient.get<Ticket[]>(`/tickets`);
+    return response.data;
+};
 
 export default function TicketList() {
   const { data: tickets, isLoading, isFetching, error } = useQuery({
     queryKey: ['tickets'],
-    queryFn: () => TicketData,
+    queryFn: fetchTickets,
   staleTime: 5000
   });
 
@@ -37,7 +42,7 @@ export default function TicketList() {
       </div>
 
       <br></br> 
-      
+
       <table>
       <thead>
         <tr>
@@ -57,8 +62,6 @@ export default function TicketList() {
         ))}
         </tbody>
       </table>
-
-      {/* This renders the Modal when the path is /tickets/new or /tickets/:id */}
       <Outlet />
     </div>
   );

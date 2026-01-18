@@ -2,7 +2,7 @@ export type Status = "open" | "in_progress" | "closed";
 
 export type TicketInputs = {
   title: string;
-  desc: string;
+  description: string;
   status: Status;
 };
 export interface Ticket {

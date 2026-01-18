@@ -2,29 +2,24 @@ import { Link, useNavigate } from 'react-router-dom';
 import {  useQueryClient, useMutation } from '@tanstack/react-query';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import Modal from './Modal';
-import type { Ticket, TicketInputs } from '../types';
+import type {  TicketInputs } from '../types';
+import apiClient from '../api/client';
 
 
 
 export default function TicketForm() {
     const navigate = useNavigate();
-    // LATER: Replace with API call
     const queryClient = useQueryClient();
     const { register, handleSubmit, formState: { errors } } = useForm<TicketInputs>({ defaultValues: { status: 'open' }});
     
     const mutation = useMutation({
-        mutationFn: async (newTicket: Ticket) => {
-            // Simulate API delay
-            await new Promise((r) => setTimeout(r, 500));
+        mutationFn: async (newTicket: TicketInputs) => {
+            await  apiClient.post<TicketInputs, string>(`/tickets`, newTicket );
             return newTicket;
         },
-        onSuccess: (newTicket) => {
-            // 2. Update the Detail Cache (['tickets', id])
-            queryClient.setQueryData(['tickets'], (oldTickets: Ticket[] ) => {
-                return newTicket ? [ ...oldTickets,  newTicket] : oldTickets;
-            });
-
-            console.log("Created ticket: " + JSON.stringify(newTicket));
+        onSuccess: (newTicket: TicketInputs) => {
+            console.log(`New ticket created: ${JSON.stringify(newTicket)}`); 
+            queryClient.invalidateQueries({ queryKey: ['tickets'] }); // Invalidate ticket query to refetch   
             navigate(`/`);
         }
     });
@@ -32,15 +27,11 @@ export default function TicketForm() {
 
     // RHF provides the data directly to this handler
     const onSubmit: SubmitHandler<TicketInputs> = (data) => {
-        const currentTickets = queryClient.getQueryData<Ticket[]>(['tickets']) || [];
-        const newID = (currentTickets.length + 1).toString();
 
-        const newTicket: Ticket = {
-        id: newID,
+        const newTicket: TicketInputs = {
         title: data.title,
-        description: data.desc,
-        status: data.status,
-        created_at: new Date().toISOString(),
+        description: data.description,
+        status: data.status
         };
 
         mutation.mutate(newTicket);
@@ -55,22 +46,22 @@ export default function TicketForm() {
             <input
             {...register("title", { required: "Title is required" })}
             style={inputStyle}
-            />
+            /><br></br>
             {errors.title && <span style={{ color: 'red' }}>{errors.title.message}</span>}
         </div>
 
         <br></br>
         <div className="form-group">
-            <label  htmlFor="desc">Description</label>
+            <label  htmlFor="description">Description</label>
             <textarea
-                {...register("desc", { 
+                {...register("description", { 
                     required: "Description is required",
                     minLength: { value: 10, message: "Description too short" }
                 })}
                 rows={4}
                 style={inputStyle}
-            ></textarea>
-            {errors.desc && <span style={{ color: 'red' }}>{errors.desc.message}</span>}
+            ></textarea><br></br>
+            {errors.description && <span style={{ color: 'red' }}>{errors.description.message}</span>}
         </div>
 
         <br></br>

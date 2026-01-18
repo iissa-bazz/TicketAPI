@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import {  useQueryClient, useMutation } from '@tanstack/react-query';
+import { useForm, type SubmitHandler } from 'react-hook-form';
 import Modal from './Modal';
 import type { Ticket, TicketInputs } from '../types';
 
@@ -9,6 +10,7 @@ export default function TicketForm() {
     const navigate = useNavigate();
     // LATER: Replace with API call
     const queryClient = useQueryClient();
+    const { register, handleSubmit, formState: { errors } } = useForm<TicketInputs>({ defaultValues: { status: 'open' }});
     
     const mutation = useMutation({
         mutationFn: async (newTicket: Ticket) => {
@@ -27,45 +29,54 @@ export default function TicketForm() {
         }
     });
 
-    const handleStatusSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const formData = new FormData(e.currentTarget);
-        const newStatus = formData.get('status') as string;
-        const newTitle = formData.get('title') as string;
-        const newDescription = formData.get('desc') as string;
-        const currentTickets = queryClient.getQueryData<Ticket[]>(['tickets']);
-        const newID  = (currentTickets?currentTickets.length + 1 : 0).toString() ;
-        const createdAt = new Date().toISOString();
+
+    // RHF provides the data directly to this handler
+    const onSubmit: SubmitHandler<TicketInputs> = (data) => {
+        const currentTickets = queryClient.getQueryData<Ticket[]>(['tickets']) || [];
+        const newID = (currentTickets.length + 1).toString();
+
         const newTicket: Ticket = {
-            id: newID?.toString() || '0',
-            title: newTitle,
-            description: newDescription,
-            status: newStatus as "open" | "in_progress" | "closed",
-            created_at: createdAt
+        id: newID,
+        title: data.title,
+        description: data.desc,
+        status: data.status,
+        created_at: new Date().toISOString(),
         };
-        mutation.mutate( newTicket);
-        
+
+        mutation.mutate(newTicket);
     };
 
   return (
     <Modal>
     <h2>Create Ticket</h2>
-    <form onSubmit={handleStatusSubmit}>
+    <form onSubmit={handleSubmit(onSubmit)}>
         <div className="form-group">
             <label  htmlFor="title">Title</label>
-            <input type="text" id="title"  name="title" required style={inputStyle} ></input>
+            <input
+            {...register("title", { required: "Title is required" })}
+            style={inputStyle}
+            />
+            {errors.title && <span style={{ color: 'red' }}>{errors.title.message}</span>}
         </div>
 
         <br></br>
         <div className="form-group">
             <label  htmlFor="desc">Description</label>
-            <textarea id="desc" name="desc" required rows={4} style={inputStyle}></textarea>
+            <textarea
+                {...register("desc", { 
+                    required: "Description is required",
+                    minLength: { value: 10, message: "Description too short" }
+                })}
+                rows={4}
+                style={inputStyle}
+            ></textarea>
+            {errors.desc && <span style={{ color: 'red' }}>{errors.desc.message}</span>}
         </div>
 
         <br></br>
         <div className="form-group">
             <label  htmlFor="status">Status</label>
-            <select id="status" name="status" defaultValue="open"  style={inputStyle}>
+            <select {...register("status")} defaultValue="open"  style={inputStyle}>
                 <option value="open" >Open</option>
                 <option value="in_progress">In Progress</option>
                 <option value="closed">Closed</option>
@@ -73,7 +84,13 @@ export default function TicketForm() {
         </div>
         <br></br>
         <div className="actions">
-            <button type="submit" style={{ backgroundColor: 'rgba(56, 170, 137, 0.69)', color: 'white' }}>Submit</button>
+            <button
+            type="submit"
+            disabled={mutation.isPending}
+            style={{ backgroundColor: 'rgba(56, 170, 137, 0.69)', color: 'white' }}
+          >
+            {mutation.isPending ? 'Submitting...' : 'Submit'}
+          </button>
         </div>
     </form>
     <p><Link to={`/`}>← Back to list</Link></p>  

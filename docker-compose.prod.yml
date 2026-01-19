@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  backend:
+    image: ghcr.io/YOUR_USERNAME/ticketing-backend:latest
+    container_name: ticket-backend
+    volumes:
+      - ticket-data:/data  # Persistent storage
+    networks:
+      - ticket-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  frontend:
+    image: ghcr.io/YOUR_USERNAME/ticketing-frontend:latest
+    container_name: ticket-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - ticket-network
+
+networks:
+  ticket-network:
+    driver: bridge
+
+volumes:
+  ticket-data:
+    driver: local

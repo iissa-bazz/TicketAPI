@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ticket-backend
+    volumes:
+      - ./backend/data:/data  # Persist ticket data
+    networks:
+      - ticket-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ticket-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - ticket-network
+
+networks:
+  ticket-network:
+    driver: bridge

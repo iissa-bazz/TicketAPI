@@ -45,10 +45,10 @@
 **Features**
 
 - ✅ Core (included)
-  - Display list of tickets
-  - Create new ticket form
-  - Update ticket status
-  - Basic error handling
+  - [x] Display list of tickets
+  - [x] Create new ticket form
+  - [x] Update ticket status
+  - [x] Basic error handling
 - ➡️ Advanced (next)	
   - Loading indicators
   - Filter by status

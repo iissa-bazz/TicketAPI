@@ -16,7 +16,7 @@ export default function TicketDetails() {
         queryKey: queryKeys.tickets.detail(id),
         queryFn: () => fetchTicketById(id, queryClient),
         initialData: () => {
-            return queryClient.getQueryData<Ticket[]>(['tickets'])?.find(t => t.id === id); // Use cached data first
+            return queryClient.getQueryData<Ticket[]>(queryKeys.tickets.all)?.find(t => t.id === id); // Use cached data first
         },
         staleTime: 5000 // Cache results for 5 seconds before refetching
     });

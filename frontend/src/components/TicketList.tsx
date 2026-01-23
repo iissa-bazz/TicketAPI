@@ -1,23 +1,66 @@
 import { Link, Outlet } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import apiClient from '../api/client';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { queryKeys ,fetchTicketById,  fetchTickets} from '../api/client';
 import type { Ticket } from '../types';
 
-const fetchTickets = async (): Promise<Ticket[]> => {
-    const response = await apiClient.get<Ticket[]>(`/tickets`);
-    return response.data;
+
+
+export function TicketRow({ ticket }: { ticket: Ticket }){
+  const queryClient = useQueryClient();
+  const { data: ticketDetails, isLoading, error }  = useQuery({
+    queryKey: queryKeys.tickets.detail(ticket.id),
+    queryFn: () => fetchTicketById(ticket.id, queryClient),
+    staleTime: 5000
+    });
+    
+  if (isLoading) return (<tr>
+            <td colSpan={3}>Loading...</td>
+          </tr>);
+  if (error) return (<tr>
+            <td colSpan={3}>Error loading ticket details</td>
+          </tr>);
+
+return (<tr>
+            <td>
+              <Link to={`/tickets/${ticketDetails?.id}`}>{ticketDetails?.title}</Link>
+            </td>
+            <td>{ticketDetails?.created_at}</td>
+            <td>{ticketDetails?.status}</td>
+          </tr>)
 };
 
-export default function TicketList() {
+
+
+export function TicketList() {
   const { data: tickets, isLoading, isFetching, error } = useQuery({
-    queryKey: ['tickets'],
+    queryKey: queryKeys.tickets.all,
     queryFn: fetchTickets,
-  staleTime: 5000
+    staleTime: 5000
   });
 
     if (isLoading || isFetching) return <div>Loading tickets...</div>;
     if (error) return <div>An error occurred while fetching the tickets...</div>;
-    if (!tickets) return <div>No tickets found</div>;
+    if (!tickets) return <div>No tickets found</div>; 
+  return (
+    <table className="ticket-table">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Created At</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {tickets.map((ticket) => (
+          <TicketRow key={ticket.id} ticket={ticket} />
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
+
+export default function TicketListPage() {
   return (
     <div style={{ padding: '20px' }}>
       <h1>Support Tickets</h1>
@@ -42,26 +85,7 @@ export default function TicketList() {
       </div>
 
       <br></br> 
-
-      <table>
-      <thead>
-        <tr>
-            <th>Title (Click to expand)</th>
-            <th>Created At</th>
-            <th>Status</th>
-        </tr>
-      </thead>
-        {/* Render your table rows here */}
-        <tbody>
-        {tickets?.map(t => (
-          <tr key={t.id}>
-            <td><Link to={`/tickets/${t.id}`}>{t.title}</Link></td>
-            <td>{t.created_at}</td>
-            <td>{t.status}</td>
-          </tr>
-        ))}
-        </tbody>
-      </table>
+      <TicketList  />
       <Outlet />
     </div>
   );

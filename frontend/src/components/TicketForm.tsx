@@ -3,7 +3,7 @@ import {  useQueryClient, useMutation } from '@tanstack/react-query';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import Modal from './Modal';
 import type {  TicketInputs } from '../types';
-import apiClient from '../api/client';
+import apiClient, { queryKeys } from '../api/client';
 
 
 
@@ -19,7 +19,7 @@ export default function TicketForm() {
         },
         onSuccess: (newTicket: TicketInputs) => {
             console.log(`New ticket created: ${JSON.stringify(newTicket)}`); 
-            queryClient.invalidateQueries({ queryKey: ['tickets'] }); // Invalidate ticket query to refetch   
+            queryClient.invalidateQueries({ queryKey: queryKeys.tickets.all }); // Invalidate ticket query to refetch   
             navigate(`/`);
         }
     });

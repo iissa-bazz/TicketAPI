@@ -1,55 +1,60 @@
 import { Link, useParams} from 'react-router-dom';
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import Modal from './Modal';
-import apiClient from '../api/client';
-import type { Ticket } from '../types';
+import apiClient , { queryKeys ,fetchTicketById } from '../api/client';
+import type { Ticket, Status } from '../types';
 
 
 export default function TicketDetails() {
     // Get ticket ID from URL parameters
     const { id } = useParams<{ id: string  }>();
-    const fetchTicketById = async (id: string | undefined)  => {
-        // API call to fetch ticket by ID
-        console.log("Fetching ticket id: " + id);
-        const TicketData = await apiClient.get<Ticket[]>(`/tickets`).then(res => res.data);
-        return TicketData.find(t => t.id === id);
-    };
     //  Get current cache
     const queryClient = useQueryClient();
-    const currentCache = queryClient.getQueryData<Ticket[]>(['tickets']); 
 
     // Fetch ticket details
     const { data: ticket,isLoading, isFetching } = useQuery({
-        queryKey: ['tickets', id],
-        queryFn: () => fetchTicketById(id),
+        queryKey: queryKeys.tickets.detail(id),
+        queryFn: () => fetchTicketById(id, queryClient),
         initialData: () => {
-            return currentCache?.find(t => t.id === id); // Use cached data first
+            return queryClient.getQueryData<Ticket[]>(['tickets'])?.find(t => t.id === id); // Use cached data first
         },
         staleTime: 5000 // Cache results for 5 seconds before refetching
     });
 
     const mutation = useMutation({
-        mutationFn: async (newStatus: string) => {
-            console.log("Updating ticket status for ticketid: " + id);
+        mutationFn: async (newStatus: Status) => {
+            console.log("Updating ticket status for ticket " + id);
             const response = await apiClient.patch<Ticket>(`/tickets/${id}`, { status: newStatus });
-            return {response: response.data, status: newStatus };
+            console.log(response.data);
+            return { ticketId: id, newStatus };
         },
-        onSuccess: (response) => {
-            console.log(response.response);
-            queryClient.invalidateQueries({ queryKey: ['tickets', id] }); // Invalidate ticket query to refetch   
-            queryClient.invalidateQueries({ queryKey: ['tickets'] });
+        onSuccess: ({ ticketId, newStatus }) => {
+
+            // 1. Update the specific ticket cache
+            queryClient.setQueryData<Ticket>(queryKeys.tickets.detail(ticketId), (old) => {
+                return (!old) ? old :{ ...old, status: newStatus };
+            });
+            
+            // 2. Update the tickets list cache
+            queryClient.setQueryData<Ticket[]>(queryKeys.tickets.all, (old) => {
+                if (!old) return old;
+                return old.map(ticket => 
+                    ticket.id === ticketId 
+                        ? { ...ticket, status: newStatus } 
+                        : ticket
+                );
+            });
+            //queryClient.invalidateQueries({ queryKey: queryKeys.tickets.detail(id) }); // Invalidate ticket query to refetch   
         }
     });
 
     const handleStatusSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
-        const newStatus = formData.get('new-status') as string;
+        const newStatus = formData.get('new-status') as Status;
         mutation.mutate(newStatus);
     };
 
-    // Without `if(... && !ticket)` and ` key={ticket.status}` in the select component,  
-    // the default value of the select options will remain stuck at the initial value when the component rendered...
     if ( (isFetching || isLoading)  && !ticket ) return <Modal><div>Loading details...</div></Modal>;
     if (!ticket) return <Modal><div>Ticket not found</div></Modal>;
         

@@ -1,6 +1,8 @@
 # TicketAPI
 
 
+![](./docs/demo.gif)
+
 ## Repository Overview
 
 - [backend/](./backend): FastAPI backend.

@@ -7,8 +7,8 @@ import type { Ticket } from '../types';
 
 const apiClient = axios.create({
   // Using /api prefix, nginx will proxy to backend container
-  //baseURL: '/api', 
-  baseURL: 'http://localhost:8000', 
+  baseURL: '/api', 
+  //baseURL: 'http://localhost:8000', 
   headers: {
     'Content-Type': 'application/json',
   },
